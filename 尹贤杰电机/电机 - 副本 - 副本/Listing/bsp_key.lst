@@ -1,0 +1,190 @@
+C51 COMPILER V9.56.0.0   BSP_KEY                                                           10/29/2017 22:10:09 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE BSP_KEY
+OBJECT MODULE PLACED IN ..\Output\bsp_key.obj
+COMPILER INVOKED BY: D:\Program Files (x86)\keil\C51\BIN\C51.EXE ..\User\bsp_key.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Us
+                    -er) DEBUG OBJECTEXTEND PRINT(..\Listing\bsp_key.lst) TABS(8) OBJECT(..\Output\bsp_key.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include "bsp_key.h" 
+   3          #include "bsp_delay.h" 
+   4          sbit K1 = P2^1;
+   5          sbit K2 = P2^2;
+   6          sbit K3 = P2^3;
+   7          sbit K4 = P2^4;
+   8          sbit MA = P2^0;
+   9          sbit MB = P2^7;
+  10          u8 flag=0,flag_s=0; //flagÊÇÕý·´×ªµÄ±êÖ¾Î» 0 ´ú±íÄæÊ±Õë 1 ´ú±íË³Ê±Õë
+  11                              //flag_sÊÇÆôÍ£±êÖ¾Î»£¨star   stop£©0 ´ú±í star 1 ´ú±í stop
+  12          extern u8 ge,shi,location,duty_A,duty_B;  // Íâ²¿±äÁ¿µÄÉùÃ÷
+  13          /**
+  14           * @brief °´¼üµÄÉ¨Ãè
+  15           * @retval null
+  16           */ 
+  17          void key_scan()
+  18          {
+  19   1              u8 ge_t,shi_t; //¾Ö²¿±äÁ¿ÓÃÓÚ´æ´¢ÊýÂë¹ÜµÄÖµ
+  20   1              if(0 == K1)
+  21   1              {
+  22   2                      // °´¼üÏû¶¶
+  23   2                      delay(5);
+  24   2                      if(0 == K1);
+  25   2                      {
+  26   3                              switch(flag_s)
+  27   3                              {
+  28   4                                      case(0):
+  29   4                                        ET0=0;        //¹Ø¶¨Ê±Æ÷ ¶¨Ê±Æ÷Ò»¹Ø¾ÍÃ»ÓÐË­¿ÉÒÔ¸Ä±äduty_B
+  30   4                                        duty_A=0;     //Á½ÏàÃ»ÓÐµçÊÆ²îµç»ú²»»á×ª¶¯
+  31   4                                        duty_B=0;
+  32   4                                        
+  33   4                                        ge_t=ge;      //ÁÙÊ±´æ´¢ÊýÂë¹ÜµÄÖµ
+  34   4                                        shi_t=shi;
+  35   4                                        
+  36   4                                        ge=0;         //µç»ú²»×ªÕ¼¿Õ±ÈÎª0
+  37   4                                        shi=0;
+  38   4                                        flag_s=1;
+  39   4                                      break;
+  40   4                                      case(1):
+  41   4                                        ET0=1;        //¿ª¶¨Ê±Æ÷
+  42   4                                        ge=ge_t;      //»Ö¸´ÊýÂë¹ÜµÄÏÔÊ¾
+  43   4                                        shi=shi_t;
+  44   4                                        if(flag==1)   //Èç¹ûÊÇË³Ê±ÕëµÄ»° duty_A ÖÃ 1 
+  45   4                                        {
+  46   5                                                duty_A=1;
+  47   5                                        }
+  48   4      //                                 else        //Õâ¶Î´úÂë¿ÉÒÔ²»Òª·ÅÔÚÕâÀïÎªÁË¸üºÃÀí½â
+  49   4      //                                  {
+  50   4      //                                          duty_A=0;
+  51   4      //                                  }
+  52   4                                        flag_s=0;
+  53   4                                      break;
+  54   4                                      
+C51 COMPILER V9.56.0.0   BSP_KEY                                                           10/29/2017 22:10:09 PAGE 2   
+
+  55   4                              }
+  56   3                              
+  57   3                      }
+  58   2                      
+  59   2                      // ËÉÊÖ¼ì²â
+  60   2                      while(0 == K1);
+  61   2              }
+  62   1              
+  63   1              if(0 == K2)
+  64   1              {
+  65   2                      // °´¼üÏû¶¶
+  66   2                      delay(5);
+  67   2                      if(0 == K2);
+  68   2                      {
+  69   3                              if(0==flag_s) //Ö»ÓÐÔÚ×ª¶¯µÄ×´Ì¬ÏÂ²ÅÄÜ¸Ä±ä×ª¶¯µÄ·½Ïò
+  70   3                              {
+  71   4                                      switch(flag)
+  72   4                                      {
+  73   5                                              case(0):                  //Èç¹ûÏÖÔÚÊÇÄæÊ±ÕëÔò¸Ä±ä³ÉË³Ê±Õë duty_A 
+             -ÖÃ 1
+  74   5                                                duty_A=1;               //¸Ä±äÇ° PWM Ê¾ÒâÍ¼£¨ÒÔÕ¼¿Õ±È 80% ÎªÀý£©
+  75   5                                                location=100-location;  //__________________AÏà
+  76   5                                                flag=1;                 //--------------____BÏà
+  77   5                                              break;                    //location=100-location  Õâ¾ä´úÂëºóÕ¼¿Õ±
+             -È±ä³É 20%
+  78   5                                              case(1):                  //------------------AÏà
+  79   5                                                duty_A=0;               //----______________BÏà
+  80   5                                                location=100-location;  //Õ¼¿Õ±ÈËäÈ»±ä³É 20% µ«µçÊÆ²î´æÔÚµÄÊ±¼äÒ
+             -ÀÈ»Îª 80%
+  81   5                                                flag=0;                 //×ªËÙ²»±ä£¬·½ÏòÈ´·´ÁË
+  82   5                                              break;                    
+  83   5                                      }
+  84   4                              }
+  85   3                      }
+  86   2                      // ËÉÊÖ¼ì²âw
+  87   2                      while(0 == K2);
+  88   2              }
+  89   1              
+  90   1              if(0 == K3)
+  91   1              {
+  92   2                      // °´¼üÏû¶¶
+  93   2                      delay(5);
+  94   2                      if(0 == K3);
+  95   2                      {
+  96   3                              if(flag_s==0)  //Ö»ÓÐÔÚ×ª¶¯µÄ×´Ì¬ÏÂ²ÅÄÜ¸Ä±äÕ¼¿Õ±ÈµÄ´óÐ¡
+  97   3                              {
+  98   4                                      if((shi*10+ge)<97)  //ÊýÂë¹ÜµÄ½øÎ»
+  99   4                                      {
+ 100   5                                              ge+=3;
+ 101   5                                              if(ge>=10)
+ 102   5                                              {
+ 103   6                                                      ge-=10;
+ 104   6                                                      shi+=1;
+ 105   6                                              }
+ 106   5                                      }
+ 107   4                                      if((flag==0)&&location<97)     //ÄæÊ±Õë×´Ì¬ÏÂÕ¼¿Õ±È¼Ó 3 
+ 108   4                                      {                              //__________________AÏà
+ 109   5                                              location+=3;           //--------------____BÏà
+ 110   5                                      }
+ 111   4                                      else if ((flag!=0)&&location>3)//Ë³Ê±Õë×´Ì¬ÏÂÕ¼¿Õ±È¼õ 3
+ 112   4                                      {                              //------------------AÏà 
+ 113   5                                              location-=3;           //----______________BÏà
+C51 COMPILER V9.56.0.0   BSP_KEY                                                           10/29/2017 22:10:09 PAGE 3   
+
+ 114   5                                      }                              //Õ¼¿Õ±ÈËäÈ»Ð¡ÁËµ«µçÊÆ²î´æÔÚµÄÊ±¼äÈ´±ä³¤ÁË
+ 115   4                              }
+ 116   3                      }
+ 117   2                      
+ 118   2                      // ËÉÊÖ¼ì²â
+ 119   2                      while(0 == K3);
+ 120   2              }
+ 121   1              
+ 122   1              if(0 == K4)
+ 123   1              {
+ 124   2                      // °´¼üÏû¶¶
+ 125   2                      delay(5);
+ 126   2                      if(0 == K4);
+ 127   2                      {
+ 128   3                              if(0==flag_s)
+ 129   3                              {
+ 130   4                                      if((shi*10+ge)>5)
+ 131   4                                      {
+ 132   5                                              if(ge>=5)
+ 133   5                                              {
+ 134   6                                                      ge-=5;
+ 135   6                                              }
+ 136   5                                              else
+ 137   5                                              {
+ 138   6                                                      ge+=10;
+ 139   6                                                      ge-=5;
+ 140   6                                                      shi-=1;
+ 141   6                                              }
+ 142   5                                              
+ 143   5                                      }
+ 144   4                                      
+ 145   4                                      if((flag==0)&&location>5)
+ 146   4                                      {
+ 147   5                                              location-=5;
+ 148   5                                      }
+ 149   4                                      else if((flag!=0)&&location<95)
+ 150   4                                      {
+ 151   5                                              location+=5;
+ 152   5                                      }
+ 153   4                              }
+ 154   3                      }
+ 155   2                      
+ 156   2                      // ËÉÊÖ¼ì²â
+ 157   2                      while(0 == K4);
+ 158   2              }
+ 159   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    303    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

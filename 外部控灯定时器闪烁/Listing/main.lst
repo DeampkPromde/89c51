@@ -1,0 +1,75 @@
+C51 COMPILER V9.56.0.0   MAIN                                                              12/16/2017 16:17:09 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN ..\Output\main.obj
+COMPILER INVOKED BY: D:\Program Files (x86)\keil\C51\BIN\C51.EXE ..\User\main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User)
+                    - DEBUG OBJECTEXTEND PRINT(..\Listing\main.lst) TABS(8) OBJECT(..\Output\main.obj)
+
+line level    source
+
+   1          #include <reg51.h>
+   2          int a,t,m;
+   3          sbit led = P2^0;
+   4          void Key_led ();
+   5          void Delay(int t);
+   6          void Control_led();
+   7          int main ()
+   8          {
+   9   1              
+  10   1              IT0=1;
+  11   1              TMOD = 0x10;
+  12   1              TH1 = 0x0b;
+  13   1              TL1 = 0xdc;
+  14   1              TR1 = 1;
+  15   1              IE = 0x89;
+  16   1              led = 1;
+  17   1              m = 0;
+  18   1              while(1)
+  19   1              {
+  20   2              
+  21   2              }
+  22   1      }
+  23          
+  24          void Delay(int t)
+  25          {
+  26   1              int i,j;
+  27   1              for(i=t;i>0;i--)
+  28   1              for (j=1000;j>0;j--);
+  29   1      }
+  30          
+  31          void TIN0_Handler() interrupt 0
+  32          {
+  33   1              led = 1;
+  34   1              Delay(1000);
+  35   1      }
+  36          void TIM0_Handler() interrupt 3
+  37          {
+  38   1              
+  39   1              TR1=0;
+  40   1              TH1 = 0x0b;
+  41   1              TL1 = 0xdc;
+  42   1              TR1=1;
+  43   1              a++;
+  44   1              if(a >=16)
+  45   1              {
+  46   2                      a = 0;
+  47   2                      led = ~led;
+  48   2              }
+  49   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    140    ----
+   CONSTANT SIZE    =   ----    ----
+C51 COMPILER V9.56.0.0   MAIN                                                              12/16/2017 16:17:09 PAGE 2   
+
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      6    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

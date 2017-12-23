@@ -1,0 +1,167 @@
+C51 COMPILER V9.56.0.0   KEY                                                               11/09/2017 19:05:52 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE KEY
+OBJECT MODULE PLACED IN ..\Output\key.obj
+COMPILER INVOKED BY: D:\Program Files (x86)\keil\C51\BIN\C51.EXE ..\User\key.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User) 
+                    -DEBUG OBJECTEXTEND PRINT(..\Listing\key.lst) TABS(8) OBJECT(..\Output\key.obj)
+
+line level    source
+
+   1          #include <reg51.h>
+   2          #include "key.h" 
+   3          #include "delay.h" 
+   4          sbit K1 = P2^1;
+   5          sbit K2 = P2^2;
+   6          sbit K3 = P2^3;
+   7          sbit K4 = P2^4;
+   8          sbit MA = P2^0;
+   9          sbit MB = P2^7;
+  10          u8 flag=0,flag_s=0;
+  11          extern u8 ge,shi,zhankongbi,duty_A,duty_B;
+  12          
+  13          void key()
+  14          {
+  15   1              u8 ge_t,shi_t;
+  16   1              if(0 == K1)
+  17   1              {
+  18   2                      delay(5);
+  19   2                      if(0 == K1);
+  20   2                      {
+  21   3                              switch(flag_s)
+  22   3                              {
+  23   4                                      case(0):
+  24   4                                        ET0=0;
+  25   4                                        duty_A=0;
+  26   4                                        duty_B=0;
+  27   4                                        
+  28   4                                        ge_t=ge;
+  29   4                                        shi_t=shi;
+  30   4                                        
+  31   4                                        ge=0;
+  32   4                                        shi=0;
+  33   4                                        flag_s=1;
+  34   4                                      break;
+  35   4                                      case(1):
+  36   4                                        ET0=1;
+  37   4                                        ge=ge_t;
+  38   4                                        shi=shi_t;
+  39   4                                        if(flag==1)
+  40   4                                        {
+  41   5                                                duty_A=1;
+  42   5                                        }
+  43   4                                        flag_s=0;
+  44   4                                      break;
+  45   4                                      
+  46   4                              }
+  47   3                      }
+  48   2                      while(0 == K1);
+  49   2              }
+  50   1              
+  51   1              if(0 == K2)
+  52   1              {
+  53   2                      delay(5);
+  54   2                      if(0 == K2);
+C51 COMPILER V9.56.0.0   KEY                                                               11/09/2017 19:05:52 PAGE 2   
+
+  55   2                      {
+  56   3                              if(0==flag_s)
+  57   3                              {
+  58   4                                      switch(flag)
+  59   4                                      {
+  60   5                                              case(0):
+  61   5                                                duty_A=1;
+  62   5                                                zhankongbi=100-zhankongbi;
+  63   5                                                flag=1;
+  64   5                                              break;
+  65   5                                              case(1):
+  66   5                                                duty_A=0;
+  67   5                                                zhankongbi=100-zhankongbi;
+  68   5                                                flag=0;
+  69   5                                              break;
+  70   5                                      }
+  71   4                              }
+  72   3                      }
+  73   2                      while(0 == K2);
+  74   2              }
+  75   1              
+  76   1              if(0 == K3)
+  77   1              {
+  78   2                      delay(5);
+  79   2                      if(0 == K3);
+  80   2                      {
+  81   3                              if(flag_s==0)
+  82   3                              {
+  83   4                                      if((shi*10+ge)<97)
+  84   4                                      {
+  85   5                                              ge+=3;
+  86   5                                              if(ge>=10)
+  87   5                                              {
+  88   6                                                      ge-=10;
+  89   6                                                      shi+=1;
+  90   6                                              }
+  91   5                                      }
+  92   4                                      if((flag==0)&&zhankongbi<97)
+  93   4                                      {
+  94   5                                              zhankongbi+=3;
+  95   5                                      }
+  96   4                                      else if ((flag!=0)&&zhankongbi>3)
+  97   4                                      {
+  98   5                                              zhankongbi-=3;
+  99   5                                      }
+ 100   4                              }
+ 101   3                      }
+ 102   2                      while(0 == K3);
+ 103   2              }
+ 104   1              
+ 105   1              if(0 == K4)
+ 106   1              {
+ 107   2                      delay(5);
+ 108   2                      if(0 == K4);
+ 109   2                      {
+ 110   3                              if(0==flag_s)
+ 111   3                              {
+ 112   4                                      if((shi*10+ge)>5)
+ 113   4                                      {
+ 114   5                                              if(ge>=5)
+ 115   5                                              {
+ 116   6                                                      ge-=5;
+C51 COMPILER V9.56.0.0   KEY                                                               11/09/2017 19:05:52 PAGE 3   
+
+ 117   6                                              }
+ 118   5                                              else
+ 119   5                                              {
+ 120   6                                                      ge+=10;
+ 121   6                                                      ge-=5;
+ 122   6                                                      shi-=1;
+ 123   6                                              }
+ 124   5                                              
+ 125   5                                      }
+ 126   4                                      
+ 127   4                                      if((flag==0)&&zhankongbi>5)
+ 128   4                                      {
+ 129   5                                              zhankongbi-=5;
+ 130   5                                      }
+ 131   4                                      else if((flag!=0)&&zhankongbi<95)
+ 132   4                                      {
+ 133   5                                              zhankongbi+=5;
+ 134   5                                      }
+ 135   4                              }
+ 136   3                      }
+ 137   2                      while(0 == K4);
+ 138   2              }
+ 139   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    303    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

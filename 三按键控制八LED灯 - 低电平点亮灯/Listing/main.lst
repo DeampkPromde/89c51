@@ -1,0 +1,93 @@
+C51 COMPILER V9.56.0.0   MAIN                                                              10/02/2017 19:05:17 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN ..\Output\main.obj
+COMPILER INVOKED BY: D:\Program Files (x86)\keil\C51\BIN\C51.EXE ..\User\main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User)
+                    - DEBUG OBJECTEXTEND PRINT(..\Listing\main.lst) TABS(8) OBJECT(..\Output\main.obj)
+
+line level    source
+
+   1          #include <reg51.h>
+   2          void daley(char);
+   3          char Key_Scan(void);
+   4          void key_catch(char keyValue);
+   5          unsigned char ledValue = 0xfe;
+   6          char flickerFlag = 0;
+   7          int main()
+   8          {
+   9   1                      while(1)
+  10   1                      {
+  11   2                                      key_catch(Key_Scan());
+  12   2                                      P0 = ledValue;
+  13   2                                      daley(5);
+  14   2                                      if(flickerFlag != 0)
+  15   2                                      {
+  16   3                                      P0 = 0xff;
+  17   3                                      daley(5);
+  18   3                                      }
+  19   2                      }
+  20   1      }
+  21          
+  22          void daley(char t)
+  23                  {
+  24   1                      char i,j;
+  25   1                      for (i=t;i>0;i--)
+  26   1                      for (j=1000;j>0;j--);
+  27   1              }
+  28          char Key_Scan(void)
+  29          {
+  30   1                      char keyValue = 0xff;
+  31   1                      if(P2 != 0xff)
+  32   1                      {
+  33   2                              int i;
+  34   2                                      daley(5);
+  35   2                                      if(P2 != 0xff)
+  36   2                                      {
+  37   3                                                      keyValue = P2;
+  38   3                                                      while(i<20&&P2 != 0xff);
+  39   3                                              {
+  40   4                                              daley(8);
+  41   4                                                      i++;
+  42   4                                              }
+  43   3                                      }
+  44   2                      }
+  45   1                      return keyValue;
+  46   1      }
+  47          void key_catch(char keyValue)
+  48          {
+  49   1              switch(keyValue)
+  50   1              {
+  51   2                      case(0xfe):
+  52   2                      if(ledValue != 0xfe)
+  53   2                      {
+  54   3                              ledValue = ~((~ledValue) >> 1);
+C51 COMPILER V9.56.0.0   MAIN                                                              10/02/2017 19:05:17 PAGE 2   
+
+  55   3                      }
+  56   2                      break;
+  57   2                                      case(0xfd):
+  58   2                                              flickerFlag = ~flickerFlag;
+  59   2                                      break;
+  60   2                                                      case(0xfb):
+  61   2                                                      if(ledValue != 0x7f)
+  62   2                                                      {
+  63   3                                                              ledValue =~((~ledValue) << 1);
+  64   3                                                      }
+  65   2                                                      break;
+  66   2              }
+  67   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    150    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

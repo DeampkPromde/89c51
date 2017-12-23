@@ -1,0 +1,52 @@
+C51 COMPILER V9.56.0.0   MAIN                                                              10/06/2017 10:46:25 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN ..\Output\main.obj
+COMPILER INVOKED BY: D:\Program Files (x86)\keil\C51\BIN\C51.EXE ..\User\main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User)
+                    - DEBUG OBJECTEXTEND PRINT(..\Listing\main.lst) TABS(8) OBJECT(..\Output\main.obj)
+
+line level    source
+
+   1          #include <reg51.h>
+   2          #define u8 unsigned char;
+   3          u8 a;
+   4          sbit led=P0^0;
+   5          int main ()
+   6          {
+   7   1              TMOD = 0x10;
+   8   1              TH1 = 0x0b;
+   9   1              TL1 = 0xdc;
+  10   1              IE = 0x88;
+  11   1              TR1 = 1;
+  12   1              led = 0;
+  13   1              while(1);
+  14   1      }
+  15          
+  16          void TIM0_Handler() interrupt 3
+  17          {
+  18   1              TR1 = 0;
+  19   1              TH1 = 0x0b;
+  20   1              TL1 = 0xdc;
+  21   1              TR1 = 1;
+  22   1              a++;
+  23   1              if(a >= 16)
+  24   1              {
+  25   2              a = 0;
+  26   2              led = ~led;
+  27   2      }
+  28   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     64    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

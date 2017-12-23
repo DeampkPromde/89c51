@@ -1,0 +1,6 @@
+"..\Output\STARTUP.obj",
+"..\Output\main.obj",
+"..\Output\delay.obj",
+"..\Output\key.obj" 
+TO "..\Output\memo" 
+PRINT("..\Listing\memo.m51")

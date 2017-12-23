@@ -1,0 +1,5 @@
+".\Objects\wei.obj",
+".\Objects\STARTUP.obj",
+".\Objects\zongxian.obj" 
+TO ".\Objects\zongxian" 
+PRINT(".\Listings\zongxian.m51")
